@@ -1,4 +1,5 @@
 #Encargado de la segmentacion del texto
+#Orden de ejecución, publisher, reconocimiento, postprocesamiento, suscriber. 
 from time import sleep
 
 from sys import path as sys_path
