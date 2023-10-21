@@ -1,7 +1,6 @@
+#Encargado de la segmentacion del texto
 from time import sleep
 
-# Updating the system path is not required if you have pip-installed
-# rticonnextdds-connector
 from sys import path as sys_path
 from os import path as os_path
 
@@ -11,22 +10,20 @@ sys_path.append(file_path + "/../../../")
 import rticonnextdds_connector as rti
 
 with rti.open_connector(
-    config_name="MyParticipantLibrary::MyPubParticipant",
+    config_name="MyParticipantLibrary::SegmenterParticipant",
     url=file_path + "/MyAppConfig.xml"
 ) as connector:
 
-    output = connector.get_output("MyPublisher::MyTextPublisher")
+    output = connector.get_output("SegmenterPublisher::SegmenterWriter")
 
-    print("Waiting for subscriptions...")
+    print("Waiting for subscribers...")
     output.wait_for_subscriptions()
 
-    print("Writing...")
-    for i in range(1, 10):
-        recognized_text = "Texto reconocido..."  # Aquí define el texto que deseas enviar
-        output.instance.set_string("texto", recognized_text)
+    print("Writing segmented text...")
+    segmented_texts = ["Segment 1 of text...", "Segment 2 of text...", "Segment 3 of text..."]
+
+    for segment in segmented_texts:
+        output.instance.set_string("segment", segment)
         output.write()
 
-        sleep(0.5)  # Escribe a una velocidad de un mensaje cada 0.5 segundos, por ejemplo.
-
-    print("Exiting...")
-    output.wait()  # Espera a que todas las suscripciones reciban los datos antes de salir
+        sleep(0.5)
