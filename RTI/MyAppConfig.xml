@@ -17,54 +17,30 @@
 
     <!-- types -->
     <types>
-        <struct name="SegmentedText">
-            <member name="segment" stringMaxLength="512" type="string"/>
-        </struct>
-        <struct name="RecognizedText">
-            <member name="text" stringMaxLength="512" type="string"/>
+        <struct name="TextoOCR">
+            <member name="texto" stringMaxLength="10000" type="string"/>
         </struct>
     </types>
 
     <!-- Domain Library -->
     <domain_library name="MyDomainLibrary">
         <domain name="MyDomain" domain_id="0">
-            <register_type name="SegmentedText" type_ref="SegmentedText" />
-            <register_type name="RecognizedText" type_ref="RecognizedText" />
-
-            <topic name="SegmentedTextTopic" register_type_ref="SegmentedText"/>
-            <topic name="RecognizedTextTopic" register_type_ref="RecognizedText"/>
+            <register_type name="TextoOCR" type_ref="TextoOCR" />
+            <topic name="OCR_TextTopic" register_type_ref="TextoOCR"/>
         </domain>
     </domain_library>
 
     <!-- Participant library -->
     <domain_participant_library name="MyParticipantLibrary">
-        <domain_participant name="SegmenterParticipant" domain_ref="MyDomainLibrary::MyDomain">
-            <publisher name="SegmenterPublisher">
-                <data_writer name="SegmenterWriter" topic_ref="SegmentedTextTopic" />
+        <domain_participant name="MyPubParticipant" domain_ref="MyDomainLibrary::MyDomain">
+            <publisher name="MyPublisher">
+                <data_writer name="MyTextPublisher" topic_ref="OCR_TextTopic" />
             </publisher>
         </domain_participant>
 
-        <domain_participant name="RecognizerParticipant" domain_ref="MyDomainLibrary::MyDomain">
-            <subscriber name="RecognizerSubscriber">
-                <data_reader name="RecognizerReader" topic_ref="SegmentedTextTopic" />
-            </subscriber>
-            <publisher name="RecognizerPublisher">
-                <data_writer name="RecognizerWriter" topic_ref="RecognizedTextTopic" />
-            </publisher>
-        </domain_participant>
-
-        <domain_participant name="PostProcessorParticipant" domain_ref="MyDomainLibrary::MyDomain">
-            <subscriber name="PostProcessorSubscriber">
-                <data_reader name="PostProcessorReader" topic_ref="RecognizedTextTopic" />
-            </subscriber>
-            <publisher name="PostProcessorPublisher">
-                <data_writer name="PostProcessorWriter" topic_ref="SegmentedTextTopic" />
-            </publisher>
-        </domain_participant>
-
-        <domain_participant name="PDFGeneratorParticipant" domain_ref="MyDomainLibrary::MyDomain">
-            <subscriber name="PDFGeneratorSubscriber">
-                <data_reader name="PDFGeneratorReader" topic_ref="SegmentedTextTopic" />
+        <domain_participant name="MySubParticipant" domain_ref="MyDomainLibrary::MyDomain">
+            <subscriber name="MySubscriber">
+                <data_reader name="MyTextReader" topic_ref="OCR_TextTopic" />
             </subscriber>
         </domain_participant>
     </domain_participant_library>
