@@ -1,3 +1,4 @@
+import os
 from time import sleep
 import rticonnextdds_connector as rti
 from sys import path as sys_path
@@ -7,9 +8,11 @@ from OCRfinal import *
 file_path = os_path.dirname(os_path.realpath(__file__))
 sys_path.append(file_path + "/../../../")
 
-# Abrir el archivo PDF y leer su contenido binario
-with open('../aPdf/1.pdf', 'rb') as pdf_file:
-    pdf_content = pdf_file.read()
+# Directorio donde se encuentran los archivos PDF
+pdf_directory = 'PDF'
+
+# Obtener la lista de archivos PDF en el directorio
+pdf_files = [f for f in os.listdir(pdf_directory) if f.endswith('.pdf')]
 
 with rti.open_connector(
     config_name="MyParticipantLibrary::MyPubParticipant",
@@ -21,13 +24,13 @@ with rti.open_connector(
     print("Waiting for subscriptions...")
     output.wait_for_subscriptions()
 
-    pdf_filename = '1.pdf'
-    parrafo = obtenerParrafo(pdf_filename)
-    parrafo = " ".join(parrafo)
+    for pdf_filename in pdf_files:
+        pdf_filepath = os.path.join(pdf_directory, pdf_filename)
+        parrafo = obtenerParrafo(pdf_filepath)
+        parrafo = " ".join(parrafo)
 
-    print("Writing...")
-    for i in range(1, 2):
-        recognized_text = parrafo  # Aquí define el texto que deseas enviar
+        print(f"Writing content from {pdf_filename}...")
+        recognized_text = parrafo  # Aquí defines el texto que deseas enviar
         output.instance.set_string("texto", recognized_text)
         output.write()
 

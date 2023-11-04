@@ -21,13 +21,11 @@ with rti.open_connector(
     print("Waiting for publications...")
     input.wait_for_publications()  # Espera al menos una publicación coincidente
 
-    print("Waiting for data...")
     for i in range(1, 500):
         input.wait()  # Espera datos en esta entrada
         input.take()
         for sample in input.samples.valid_data_iter:
             # Obtén el campo 'texto' del mensaje
             texto_recibido = sample.get_string("texto")
-            print(texto_recibido)
             texto_recibido = texto_recibido.split('\n')
-            generarOutput(texto_recibido, "texto_final.pdf")
+            generarOutput(texto_recibido, f"texto_final_{i}.pdf")
