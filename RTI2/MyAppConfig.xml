@@ -11,13 +11,6 @@
                 <participant_name>
                     <name>OCR Text Recognizer</name>
                 </participant_name>
-                <discovery>
-                    <initial_peers>
-                        <!-- Add an element for each machine you want to communicate with -->
-                        <element>192.168.1.191</element>
-                        <element>192.168.1.238</element>
-                    </initial_peers>
-                </discovery>
             </domain_participant_qos>
         </qos_profile>
     </qos_library>
